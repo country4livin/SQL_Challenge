@@ -1,6 +1,6 @@
 CREATE TABLE Departments (
-    Dept_ID VARCHAR NOT NULL,
-    Dept_Name VARCHAR NOT NULL,
+    Dept_ID VARCHAR(6) NOT NULL,
+    Dept_Name VARCHAR(20) NOT NULL,
     CONSTRAINT pk_Departments PRIMARY KEY (Dept_ID)
 );
 
@@ -8,7 +8,7 @@ SELECT * from Departments;
 
 CREATE TABLE DeptEmployee (
     Employee_ID INTEGER NOT NULL,
-    Dept_ID VARCHAR NOT NULL,
+    Dept_ID VARCHAR(6) NOT NULL,
     CONSTRAINT pk_DeptEmployee PRIMARY KEY (Employee_ID, Dept_ID),
     CONSTRAINT fk_DeptEmployee_Dept_ID FOREIGN KEY (Dept_ID) REFERENCES Departments (Dept_ID)
 );
@@ -16,17 +16,17 @@ CREATE TABLE DeptEmployee (
 SELECT * from DeptEmployee;
 
 CREATE TABLE Managers (
-    Dept_ID VARCHAR NOT NULL,
+    Dept_ID VARCHAR(6) NOT NULL,
 	Manager_ID INTEGER NOT NULL,
-    CONSTRAINT pk_Managers PRIMARY KEY (Manager_ID),
+    CONSTRAINT pk_Managers PRIMARY KEY (Manager_ID, Dept_ID),
     CONSTRAINT fk_Managers_Dept_ID FOREIGN KEY (Dept_ID) REFERENCES Departments (Dept_ID)
 );
 
 SELECT * from Managers;
 
 CREATE TABLE Titles (
-    Title_ID VARCHAR NOT NULL,
-    Title VARCHAR NOT NULL,
+    Title_ID VARCHAR(20) NOT NULL,
+    Title VARCHAR(30) NOT NULL,
     CONSTRAINT pk_Titles PRIMARY KEY (Title_ID)
 );
 
@@ -34,11 +34,11 @@ SELECT * from Titles;
 
 CREATE TABLE Employees (
     Employee_ID INTEGER NOT NULL,
-    Employee_Title VARCHAR NOT NULL,
+    Employee_Title VARCHAR(50) NOT NULL,
     Birthdate DATE NOT NULL,
-    First_Name VARCHAR NOT NULL,
-    Last_Name VARCHAR NOT NULL,
-    Sex VARCHAR NOT NULL,
+    First_Name VARCHAR(50) NOT NULL,
+    Last_Name VARCHAR(50) NOT NULL,
+    Sex VARCHAR(1) NOT NULL,
     Hire_Date DATE NOT NULL,
     CONSTRAINT pk_Employees PRIMARY KEY (Employee_ID),
     CONSTRAINT fk_Employees_Title FOREIGN KEY (Employee_Title) REFERENCES Titles (Title_ID)
@@ -94,11 +94,11 @@ SELECT Employees.Employee_ID, Employees.Last_Name, Employees.First_Name, Departm
 FROM Employees
 JOIN DeptEmployee ON Employees.Employee_ID = DeptEmployee.Employee_ID
 JOIN Departments ON Departments.Dept_ID = DeptEmployee.Dept_ID
-WHERE Departments.Dept_ID = 'd007' OR Departments.Dept_ID = 'd005';
+WHERE Departments.Dept_ID IN ('d007', 'd005');
 
 --List the frequency counts, in descending order, of all the employee last names (that is, how many employees share each last name).
 SELECT Employees.Last_Name, COUNT(Last_Name) as last_name_count
 FROM Employees
 GROUP BY Last_Name
-ORDER BY Last_Name DESC;
+ORDER BY last_name_count DESC;
 
